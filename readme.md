@@ -15,7 +15,7 @@ npm i express
 # Node JS
 install nodejs
 
-# Postgre
+# PostgreSQL
 npm i pg
 
 # Axios
