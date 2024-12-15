@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Book's</title>
+    <link rel="stylesheet" href="/styles/main.css">
+  </head>
+  <body>
+
+    <div class="container"> 
+
+  <div class="header">
+    <img src="/images/logo.png" alt="Michael's Book Club" width="300" height="80">
+    <div> <ul>
+     
+        <li><a href="/admin">Admin Panel
+        </a></li>
+        
+  
+      </ul></div>
+
+  </div>
+  
+  <div class="content">
+   
+    <div class="summary">
+        <h2>Books I’ve read</h2>
+        <p>A brief summary but detailed notes for each. Use the ISBN number to find it from your local library or anywhere else. This page will constantly update as I read more, so bookmark it if you want to check back in a few months. </p>
+            <hr>
+    </div>
+    <% for(let book of books){%>
+    <div class="main">
+        <div><a href="/more/<%= book.id %>"><img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn%>-M.jpg" alt="Cover Image" ></a></div>
+        <div>
+            
+          <h2><%= book.title %> - by <%= book.author %></h2>
+          <span><b>Date read: <%= book.date %>. How strongly I recommend it: <%= book.rating %>/10</b></span>
+          <p class="welcome"><b>Reviewed By: <%= book.firstname +" " + book.lastname%></b></p>
+          <p><%= book.summary %> </p>
+          <h3><a href="/more/<%= book.id %>">Read More About The Book</a></h3>
+           
+        </div>
+        <hr>
+       
+    </div>
+    
+    <% }%>
+
+  </div>
+  <div class="footer">Michael's Book Note, All Right Reserved</div>
+
+
+    </div>
+
+
+    <script src="index.js"></script>
+  </body>
+</html>

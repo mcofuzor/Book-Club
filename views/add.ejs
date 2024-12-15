@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Testing</title>
+    <link rel="stylesheet" href="/styles/main.css">
+  </head>
+  <body>
+
+    <div class="container"> 
+
+  <div class="header">
+    <img src="/images/logo.png" alt="Michael's Book Club" width="300" height="80">
+
+
+  </div>
+  <div class="content">
+    <div class="summary">
+        <div class="name-logout" >
+            <h3 class="welcome"></h3>
+            <p><a href="#" >Logout</a> </p></div>
+        <h1></h1>
+    </div>
+    <div class="newnote">
+        <% if (locals.error) { %>
+        <p class="welcome"><%= error %></p>
+        <% } %>
+        <form class="holdnote" action="/add" method="post">
+          <input type="hidden" name="userID" value="<%= userID %>">
+        <div> <input id="edittitle" class="newbook"  name="fname" type="text" placeholder="First Name" size="50"> </div>
+        <div><input id="isbn-no" class="newbook" name="lname"  type="text" placeholder="Last Name" size="50"></div>
+        <div> <input id="editauthor" class="newbook" name="uname" type="text" placeholder="User Name" size="50"></div>
+        <div> <input id="editrate" class="newbook"  name="upass"  type="password" placeholder="Password" size="50"></div>
+
+        <select name="type" class="newbook" >
+    
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+        
+          
+        <div> <input class="newbook bookupdate"  type="submit" value="Register" ></div>
+        </form>
+          
+      
+      
+       
+    </div>
+
+
+  </div>
+  <div class="footer">Michael's Book Note, All Right Reserved</div>
+
+
+    </div>
+
+
+    <script src="index.js"></script>
+    
+  </body>
+</html>

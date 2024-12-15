@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Testing</title>
+    <link rel="stylesheet" href="/styles/main.css">
+  </head>
+  <body>
+
+    <div class="container"> 
+
+  <div class="header">
+    <img src="/images/logo.png" alt="Michael's Book Club" width="300" height="80">
+    <div> <ul>
+     
+      <li><a href="/new/<%= userlogin.id%>">New Book
+      </a></li>
+      <% if (userlogin.usertype=="admin") { %>
+      <li id="adduser"><a href="/adduser" >Add User</a></li>
+      <% }%>
+    </ul></div>
+
+  </div>
+  <div class="content">
+    <div class="summary">
+      <div class="name-logout" >
+        <h3 class="welcome">Welcome Back <%= userlogin.firstname +" " + userlogin.lastname %> !</h3>
+        <p><a href="#" >Logout</a> </p></div>
+        <h2>Books I’ve read</h2>
+        <p>This is brief summary but detailed notes for each. Use the ISBN number to find it from your local library or anywhere else. 
+            .</p>
+            <hr>
+    </div>
+    <% for(let book of books){%>
+      
+    <div class="main">
+      
+        <div><img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn%>-M.jpg"  alt="Cover Image"></div>
+        <div>
+
+          <h2 id="title<%= book.id %> "><%= book.title %> - by <%= book.author %></h2>
+          <span id="date<%= book.id %>"><b><%= book.date %>.. How strongly I recommend it: <%= book.rating %>/10</b></span>
+          <p id="note<%= book.id %>"> <%= book.summary %> </p>
+          <h3><a class="readmore" href="/more/<%= book.id %>">Read More About The Book</a></h3>
+          <form class="edit" action="/edit" method="post">
+            <input type="hidden" name="updatedBookId" value="<%= book.id %>">
+          <input id="edittitle<%=book.id%>" class="editbook" hidden="true" type="text" placeholder="Book Title"  value="<%= book.title %>"  size="200">
+          <input id="editauthor<%=book.id%>" class="editbook" hidden="true" type="text" value="<%= book.author %>"placeholder="Author Name" size="200">
+          <input id="editisbn<%=book.id%>"class="editisbn" hidden="true" type="text" placeholder="ISBN" value="<%= book.isbn %>"size="2000">
+          <input id="editrate<%=book.id%>" class="editbook" hidden="true" type="text"value="<%= book.rating %>" placeholder="Rating Between 1 t0 10" size="200">
+          <textarea id="editnote<%=book.id%>" hidden="true"  rows="50" cols="100%"><%= book.note %></textarea>
+          <button id="submitedit<%=book.id%>" class="bookupdate" hidden="true"  >Submit</button>
+        </form>
+       
+       <div class="holdedit">
+          <form action="/edit/<%=book.id%>" method="post">
+            <input id="edit"  class="bookupdate" name="userID" value="<%=userlogin.id%>" type="hidden">
+          <input id="edit<%=book.id%>"  class="bookupdate"  type="submit" value="Edit">
+        </form>
+          <form action="/delete/<%=book.id%>" method="post">
+            <input  class="bookupdate" name="userID" value="<%=userlogin.id%>" type="hidden">
+          <input id="delete" class="bookupdate" type="submit"  value="Delete" > 
+         </form>
+        </div>
+          <BR>
+         
+        </div>
+        
+      
+       
+    </div>
+    
+
+    <% }%>
+  </div>
+  <div class="footer">Michael's Book Note, All Right Reserved</div>
+
+
+    </div>
+
+    <script>
+        function bookUpdate(id) {
+          document.getElementById("title" + id).setAttribute("hidden", true);
+          document.getElementById("edit" + id).setAttribute("hidden", true);
+          document.getElementById("date" + id).setAttribute("hidden", true);
+          document.getElementById("note" + id).setAttribute("hidden", true);
+          document.getElementById("readmore").setAttribute("hidden", true);
+          readmore
+          document.getElementById("edittitle" + id).removeAttribute("hidden");
+          document.getElementById("editauthor" + id).removeAttribute("hidden");
+          document.getElementById("editnote" + id).removeAttribute("hidden");
+          document.getElementById("editrate" + id).removeAttribute("hidden");
+          document.getElementById("editisbn" + id).removeAttribute("hidden");
+          document.getElementById("submitedit" + id).removeAttribute("hidden");
+        }
+
+      </script>
+  </body>
+</html>

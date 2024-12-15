@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Testing</title>
+    <link rel="stylesheet" href="/styles/main.css">
+  </head>
+  <body>
+
+    <div class="container"> 
+
+  <div class="header">
+    <img src="/images/logo.png" alt="Michael's Book Club" width="300" height="80">
+
+
+  </div>
+  <div class="content">
+    <div class="summary">
+      <div class="name-logout" >
+        <h3></h3>
+        <p><a href="#" >Logout</a> </p></div>
+    </div>
+    <div class="newnote">
+       
+        <form class="holdnote" action="/newnote" method="post">
+          <input type="hidden" name="userID" value="<%= userID %>">
+        <div> <input id="edittitle" class="newbook"  name="title" type="text" placeholder="Book Title" size="100"> </div>
+        <div><input id="isbn-no" class="newbook" name="isbn"  type="text" placeholder="ISBN NO" size="50"></div>
+        <div> <input id="editauthor" class="newbook" name="author" type="text" placeholder="Author Name" size="50"></div>
+        <div> <input id="editrate" class="newbook"  name="rate"  type="number" placeholder="Rating Between 1 & 10" size="200"></div>
+        <div> <textarea class="editbook" name="note"  rows="50" cols="100%"></textarea></div>
+          
+        <div> <input class="newbook bookupdate"  type="submit" value="Submit" ></div>
+        </form>
+          
+      
+      
+       
+    </div>
+
+
+  </div>
+  <div class="footer">Michael's Book Note, All Right Reserved</div>
+
+
+    </div>
+
+
+    <script src="index.js"></script>
+    
+  </body>
+</html>
