@@ -4,33 +4,50 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import axios from "axios";
+import bcrypt from "bcrypt";
+import passport from "passport";
+import { Strategy } from "passport-local";
+import session from "express-session";
+import env from "dotenv";
+
 
 const app = express();
 const port = 3000;
+env.config();
+
+
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+const saltRounds = 10;
 
 //connect to the postgre DB
 
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "mybooknote",
-  password: "school123",
-  port: 5432,
+  user: process.env.PG_USER,
+  host: process.env.PG_HOST,
+  database: process.env.PG_DATABASE,
+  password: process.env.PG_PASSWORD,
+  port: process.env.PG_PORT,
 });
 db.connect();
 
-//Using the bodyparse middlware to locatte the statics files in the public folder
+//Using the passport and bodyparse middlware to locatte the statics files in the public folder and connect to passport session
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 let books = [];
 
-async function  getAllBook (userID) {
-    
-     return abooks
-
-}
 
 //Using expresssjs get to render the index page and using sql select state to restrieve books from the db
 app.get("/", async (req, res) => {
@@ -52,70 +69,78 @@ const userlogin= [];
 const userAuthen = false;
 
 //authenticating the admin login with endpoint and using sql select statement to retrieve the admin data
-app.post("/adminlog", async (req, res) => {
-    const user = req.body.username;
-    const pass = req.body.pass;
-    try {
-        const result = await db.query("SELECT * FROM admin WHERE username=($1) AND userpass=($2)", [user, pass]);
-        const data = result.rows[0];
-    const userID = data.id;
-    const userType =data.usertype;
+app.post("/adminlog",  
+  passport.authenticate("local", {
+    successRedirect: "/main",
+    failureRedirect: "/admin",
+    failureMessage: "User Not Found"
+   })
+  )
+   app.get("/main", async (req, res) => {
+    if (req.isAuthenticated()) {
+    const user = req.user
+    const userID = req.user.id;
 
-   
-    const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
+   try { const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
     const bookResult = allbook.rows;
      const abooks= bookResult; 
-     console.log(bookResult);
+     //console.log(bookResult);
+     res.render("main.ejs", {
+      books: abooks,
+      user:user })
+
    
-    res.render("main.ejs", {
-        userlogin: data,
-        books: abooks, 
        
-    })
-    
-  }
-    
-  catch(err){
-    console.log(err)
-    res.render("admin.ejs", {
-        error: "Login Unsuccessful, Please Enterr The Details Correctly.",
+     } catch (err) {
+        res.send("No Book Found")
+    }
+} else {
+  res.render("admin.ejs")
+}})
 
-    })
-}
-
-
-  });
+  
 
   //Using expressjs to render the add page with the adduser endpoint
   app.get("/adduser", async (req, res) => {
-    const userID = req.body.userID;
-    res.render("add.ejs", {
-        userID: userID
-    });
+    if (req.isAuthenticated()) {
+      const userID = req.user
+    res.render("add.ejs", {userID:userID})}
+    else {
+      res.render("admin.ejs")
+    }
   });
 
   //Inserting admin data into the admin table with sql insert query
   app.post("/add", async (req, res) => {
-    const userID = req.body.userID;
+    if (req.isAuthenticated()) {
+    const user = req.user
+    const userID = req.user.id;
     const fname = req.body.fname;
     const lname = req.body.lname;
     const username = req.body.uname;
     const type = req.body.type;
     const password = req.body.upass;
     try {
-        await db.query("INSERT INTO admin (username, userpass, firstname, lastname, usertype) VALUES (($1), ($2), ($3),($4),($5))", [username,  password, fname, lname, type]);
-        const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
+        bcrypt.hash(password, saltRounds, async (err, hash) => {
+            if (err) {
+                console.log("Error hashing password");
+            } else {
+     db.query("INSERT INTO admin (username, userpass, firstname, lastname, usertype) VALUES ($1, $2, $3, $4, $5)", [username,  hash, fname, lname, type]);
+        const allbook =  await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
     const bookResult = allbook.rows;
      const abooks= bookResult; 
-
-     const result = await db.query("SELECT * FROM admin WHERE id=($1)", [userID]);
-     const data = result.rows[0];
+   
+     //const result = await db.query("SELECT * FROM admin WHERE id=($1)", [userID]);
+     //const data = result.rows[0];
 
         
     res.render("main.ejs", {
-        userlogin: data,
-        books: abooks
+        //userlogin: data,
+        books: abooks,
+        user:user
         });
+
+    }})
     } catch(err){
         console.log(err)
         res.render("add.ejs", {
@@ -123,46 +148,54 @@ app.post("/adminlog", async (req, res) => {
             error: "Account Not Created.",
 
         })
-    }
+    } 
 
-  });
+  }  else {
+    res.render("admin.ejs")
+  }});
 
-  
+
   app.get("/new/:id", async (req, res) => {
-    const userID = parseInt(req.params.id);
+    if (req.isAuthenticated()) {
+      const userID = req.user
+    //const userID = parseInt(req.params.id);
     console.log(userID)
-    res.render("new.ejs", {userID:userID});
-  });
+    res.render("new.ejs", {userID:userID}); }
+    else {
+      res.render("admin.ejs")
+    }} );
 
   app.post("/newnote", async (req, res) => {
+    if (req.isAuthenticated()) {
     const title = req.body.title;
     const author = req.body.author;
     const rate = req.body.rate;
     const notedate = new Date();
     const note = req.body.note;
     const isbn = req.body.isbn;
-    const userID = parseInt(req.body.userID);
+    const summary = req.body.summary;
+    const userID = req.user.id;
     console.log(userID)
     try {
-        await db.query("INSERT INTO books (title, rating, readdate, userid, note, author, isbn) VALUES (($1), ($2), ($3),($4),($5),($6),($7))", [title,  rate, notedate, userID, note,  author, isbn]);
+         db.query("INSERT INTO books (title, rating, readdate, userid, note, author, isbn summary) VALUES (($1), ($2), ($3),($4),($5),($6),($7), ($8))", [title,  rate, notedate, userID, note,  author, isbn, summary]);
         const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
     const bookResult = allbook.rows;
      const abooks= bookResult; 
 
-     const result = await db.query("SELECT * FROM admin WHERE id=($1)", [userID]);
-     const data = result.rows[0];
 
      db.end
      res.render("main.ejs", {
-        userlogin: data,
         books: abooks,})
       } catch (err) {
         console.log(err);
-      }
-  });
+      } 
+  }else {
+      res.render("admin.ejs")
+  }});
 
 
   app.get("/more/:id", async (req, res) => {
+   
     const bookID = parseInt(req.params.id);
     try {const result = await db.query("SELECT * FROM books WHERE id=($1)", [bookID]);
     const ebooks = result.rows[0];
@@ -177,6 +210,7 @@ app.post("/adminlog", async (req, res) => {
 
 
 app.post("/edit/:id", async (req, res) => {
+  if (req.isAuthenticated()) {
     const bookID = parseInt(req.params.id);
     const userID = req.body.userID;
     console.log(userID);
@@ -194,27 +228,29 @@ app.post("/edit/:id", async (req, res) => {
      res.render("edit.ejs", {
     ebook:ebooks, 
     data:data});
-});
+} else {
+  res.render("admin.ejs")
+}});
 
 
 app.post("/update", async (req, res) => {
+  if (req.isAuthenticated()) {
     const bookID = req.body.id;
     const title = req.body.title;
     const author = req.body.author;
     const rate = req.body.rate;
     const note = req.body.note;
     const isbn = req.body.isbn;
-    const userID = parseInt(req.body.userID);
+    const summary = req.body.summary;
+    const userID = req.user.id;
+   // const userID = parseInt(req.body.userID);
 
     try {
-        await db.query("UPDATE books SET title=($1), rating=($2), userid=($3), note=($4), author=($5), isbn=($6) WHERE id=($7)", [title,  rate, userID, note,  author, isbn, bookID]);
+         db.query("UPDATE books SET title=($1), rating=($2), userid=($3), note=($4), author=($5), isbn=($6), summary=($7) WHERE id=($8)", [title,  rate, userID, note,  author, isbn, summary, bookID]);
 
         const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
         const bookResult = allbook.rows;
          const abooks= bookResult; 
-
-     const result = await db.query("SELECT * FROM admin WHERE id=($1)", [userID]);
-     const data = result.rows[0];
 db.end
     
      res.render("main.ejs", {
@@ -223,23 +259,77 @@ db.end
       } catch (err) {
         console.log(err);
       }
-  });
+  }else {
+    res.render("admin.ejs")
+  }});
 
 app.post("/delete/:id", async (req, res) => {
+  if (req.isAuthenticated()) {
     const bookID = parseInt(req.params.id);
-    const userID = req.body.userID;
-  await db.query("DELETE FROM  books WHERE id=($1)", [bookID]);
+    const userID = req.user.id;
+   db.query("DELETE FROM  books WHERE id=($1)", [bookID]);
 
   const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
         const bookResult = allbook.rows;
          const abooks= bookResult; 
 
-     const result = await db.query("SELECT * FROM admin WHERE id=($1)", [userID]);
-     const data = result.rows[0];
   res.render("main.ejs", {
-        userlogin: data,
         books: abooks,});
 
+}else {
+  res.render("admin.ejs")
+}});
+
+app.get("/logout", (req, res) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
+});
+
+passport.use("local",
+  new Strategy(async function verify(username, password, cb) {
+   
+    try {
+      const result = await db.query("SELECT * FROM admin WHERE username = $1 ", [
+        username,
+      ]);
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
+        console.log(user)
+        const storedHashedPassword = user.userpass;
+        bcrypt.compare(password, storedHashedPassword, (err, valid) => {
+          if (err) {
+            //Error with password check
+            console.error("Error comparing passwords:", err);
+            return cb(err);
+          } else {
+            if (valid) {
+              //Passed password check
+              return cb(null, user);
+            } else {
+              //Did not pass password check
+              return cb(null, false);
+            }
+          }
+        });
+      } else {
+        const error="User Not Found"
+        return cb(null, false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  })
+);
+
+passport.serializeUser((user, cb) => {
+  cb(null, user);
+});
+passport.deserializeUser((user, cb) => {
+  cb(null, user);
 });
 
 app.listen(port, () => {
