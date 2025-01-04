@@ -21,7 +21,7 @@
 
       <div class="name-logout" >
         <h3><%= data.firstname +" "+data.lastname %></h3>
-        <p><a href="#" >Logout</a> </p></div>
+        <p><a href="/main" >Home</a> | <a href="/logout" >Logout</a> </p></div>
        
     </div>
     <div class="newnote">
@@ -34,7 +34,8 @@
         <div><input id="isbn-no" class="newbook" name="isbn" value="<%= ebook.isbn %>" type="text" placeholder="ISBN NO" size="50"></div>
         <div> <input id="editauthor" class="newbook" name="author" value="<%= ebook.author %>" type="text" placeholder="Author Name" size="50"></div>
         <div> <input id="editrate" class="newbook"  name="rate" value="<%= ebook.rating %>" type="number" placeholder="Rating Between 1 & 10" size="200"></div>
-        <div> <textarea class="editbook" name="note"  rows="50" cols="100%"><%= ebook.note %></textarea></div>
+        <div> <textarea class="editbook" name="summary"  rows="10" cols="100%"><%= ebook.summary %></textarea></div>
+        <div> <textarea class="editbook" name="note"  rows="40" cols="100%"><%= ebook.note %></textarea></div>
           
         <div> <input class="newbook bookupdate"  type="submit" value="Update" ></div>
         <% }%>

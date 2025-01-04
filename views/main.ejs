@@ -15,9 +15,9 @@
     <img src="/images/logo.png" alt="Michael's Book Club" width="300" height="80">
     <div> <ul>
      
-      <li><a href="/new/<%= userlogin.id%>">New Book
+      <li><a href="/new/<%= user.id%>">New Book
       </a></li>
-      <% if (userlogin.usertype=="admin") { %>
+      <% if (user.usertype=="admin") { %>
       <li id="adduser"><a href="/adduser" >Add User</a></li>
       <% }%>
     </ul></div>
@@ -26,8 +26,8 @@
   <div class="content">
     <div class="summary">
       <div class="name-logout" >
-        <h3 class="welcome">Welcome Back <%= userlogin.firstname +" " + userlogin.lastname %> !</h3>
-        <p><a href="#" >Logout</a> </p></div>
+        <h3 class="welcome">Welcome Back <%= user.firstname +" " + user.lastname %> !</h3>
+        <p><a href="/logout" >Logout</a> </p></div>
         <h2>Books I’ve read</h2>
         <p>This is brief summary but detailed notes for each. Use the ISBN number to find it from your local library or anywhere else. 
             .</p>
@@ -56,11 +56,11 @@
        
        <div class="holdedit">
           <form action="/edit/<%=book.id%>" method="post">
-            <input id="edit"  class="bookupdate" name="userID" value="<%=userlogin.id%>" type="hidden">
+            <input id="edit"  class="bookupdate" name="userID" value="<%=user.id%>" type="hidden">
           <input id="edit<%=book.id%>"  class="bookupdate"  type="submit" value="Edit">
         </form>
           <form action="/delete/<%=book.id%>" method="post">
-            <input  class="bookupdate" name="userID" value="<%=userlogin.id%>" type="hidden">
+            <input  class="bookupdate" name="userID" value="<%=user.id%>" type="hidden">
           <input id="delete" class="bookupdate" type="submit"  value="Delete" > 
          </form>
         </div>
