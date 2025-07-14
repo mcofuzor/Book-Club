@@ -49,15 +49,38 @@ app.use(passport.session());
 let books = [];
 
 
-//Using expresssjs get to render the index page and using sql select state to restrieve books from the db
+//Using expresssjs get to render the index page and using sql select state to retrieve books from the db
 app.get("/", async (req, res) => {
-  const result = await db.query("SELECT books.id, books.title, books.rating, books.readdate, books.userid, books.note, books.summary, books.author, books.isbn, admin.firstname, admin.lastname FROM books JOIN admin ON userid=admin.id ORDER BY books.id ASC");
-  const queryResult = result.rows;
-  books= queryResult;
-  console.log(books)
-  res.render("index.ejs", {
-    books: books,
-  });
+  try {
+    const searchTerm = req.query.search;
+    let result;
+    
+    if (searchTerm) {
+      // Search functionality
+      result = await db.query(
+        "SELECT books.id, books.title, books.rating, books.readdate, books.userid, books.note, books.summary, books.author, books.isbn, admin.firstname, admin.lastname FROM books JOIN admin ON userid=admin.id WHERE books.title ILIKE $1 OR books.author ILIKE $1 OR books.summary ILIKE $1 ORDER BY books.id ASC",
+        [`%${searchTerm}%`]
+      );
+    } else {
+      // Default query
+      result = await db.query("SELECT books.id, books.title, books.rating, books.readdate, books.userid, books.note, books.summary, books.author, books.isbn, admin.firstname, admin.lastname FROM books JOIN admin ON userid=admin.id ORDER BY books.id ASC");
+    }
+    
+    const queryResult = result.rows;
+    books = queryResult;
+    console.log(books);
+    res.render("index.ejs", {
+      books: books,
+      searchTerm: searchTerm
+    });
+  } catch (err) {
+    console.error("Database error:", err);
+    res.render("index.ejs", {
+      books: [],
+      searchTerm: req.query.search,
+      error: "Error loading books. Please try again later."
+    });
+  }
 });
 
 //Using the expressjs get to get the admin page
@@ -177,15 +200,15 @@ app.post("/adminlog",
     const userID = req.user.id;
     console.log(userID)
     try {
-         db.query("INSERT INTO books (title, rating, readdate, userid, note, author, isbn summary) VALUES (($1), ($2), ($3),($4),($5),($6),($7), ($8))", [title,  rate, notedate, userID, note,  author, isbn, summary]);
+         db.query("INSERT INTO books (title, rating, readdate, userid, note, author, isbn, summary) VALUES (($1), ($2), ($3),($4),($5),($6),($7), ($8))", [title,  rate, notedate, userID, note,  author, isbn, summary]);
         const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
     const bookResult = allbook.rows;
      const abooks= bookResult; 
+    const user = req.user;
 
-
-     db.end
      res.render("main.ejs", {
-        books: abooks,})
+        books: abooks,
+        user: user})
       } catch (err) {
         console.log(err);
       } 
@@ -251,11 +274,11 @@ app.post("/update", async (req, res) => {
         const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
         const bookResult = allbook.rows;
          const abooks= bookResult; 
-db.end
+        const user = req.user;
     
      res.render("main.ejs", {
-        userlogin: data,
-        books: abooks,})
+        books: abooks,
+        user: user})
       } catch (err) {
         console.log(err);
       }
@@ -272,9 +295,11 @@ app.post("/delete/:id", async (req, res) => {
   const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
         const bookResult = allbook.rows;
          const abooks= bookResult; 
+        const user = req.user;
 
   res.render("main.ejs", {
-        books: abooks,});
+        books: abooks,
+        user: user});
 
 }else {
   res.render("admin.ejs")

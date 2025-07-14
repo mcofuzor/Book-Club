@@ -28,15 +28,53 @@
     <div class="summary">
         <h3>Books read and reviewed by members of the club</h3>
         <p>A brief summary but detailed notes for each. Use the ISBN number to find it from your local library or anywhere else. This page will constantly update as we read more, so bookmark it if you want to check back in a few months. </p>
+        
+        <% if (locals.error) { %>
+            <div style="background-color: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                <%= error %>
+            </div>
+        <% } %>
+        
+        <!-- Search Form -->
+        <form method="GET" action="/" style="margin: 20px 0;">
+            <input type="text" name="search" placeholder="Search books by title, author, or summary..." 
+                   value="<%= locals.searchTerm || '' %>" 
+                   style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+            <button type="submit" style="padding: 10px 20px; background-color: #010172; color: white; border: none; border-radius: 5px; cursor: pointer;">Search</button>
+            <% if (locals.searchTerm) { %>
+                <a href="/" style="margin-left: 10px; padding: 10px 20px; background-color: #ccc; color: black; text-decoration: none; border-radius: 5px;">Clear</a>
+            <% } %>
+        </form>
             <hr>
     </div>
+    <% if (books.length === 0) { %>
+        <div style="text-align: center; padding: 40px;">
+            <h3>No books found</h3>
+            <% if (locals.searchTerm) { %>
+                <p>No books match your search for "<%= searchTerm %>". Try a different search term.</p>
+            <% } else { %>
+                <p>No books have been added to the club yet.</p>
+            <% } %>
+        </div>
+    <% } else { %>
     <% for(let book of books){%>
     <div class="main">
-        <div><a href="/more/<%= book.id %>"><img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn%>-M.jpg" alt="Cover Image" ></a></div>
+        <div><a href="/more/<%= book.id %>">
+            <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn%>-M.jpg" 
+                 alt="<%= book.title %> Cover" 
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                 style="width: 100%; height: 250px; object-fit: cover;">
+            <div style="display: none; width: 100%; height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box;">
+                <div>
+                    <h4 style="margin: 0; font-size: 16px; line-height: 1.2;"><%= book.title %></h4>
+                    <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.8;"><%= book.author %></p>
+                </div>
+            </div>
+        </a></div>
         <div>
             
           <h2><%= book.title %> - by <%= book.author %></h2>
-          <span><b>Date read: <%= book.date %>. How strongly I recommend it: <%= book.rating %>/10</b></span>
+          <span><b>Date read: <%= book.readdate %>. How strongly I recommend it: <%= book.rating %>/10</b></span>
           <p class="welcome"><b>Reviewed By: <%= book.firstname +" " + book.lastname%></b></p>
           <p><%= book.summary %> </p>
           <h3><a href="/more/<%= book.id %>">Read More About The Book</a></h3>
@@ -47,6 +85,7 @@
     </div>
     
     <% }%>
+    <% } %>
 
   </div>
   <div class="footer">Michael's Book Note, All Right Reserved</div>
