@@ -27,7 +27,19 @@
     <div class="summary">
       <div class="name-logout" >
         <h3 class="welcome">Welcome Back <%= user.firstname +" " + user.lastname %> !</h3>
-        <p><a href="/logout" >Logout</a> </p></div>
+        <p><a href="/logout" >Logout</a> </p>
+      </div>
+      <% if (locals.success) { %>
+        <div style="background-color: #e8f5e8; color: #2e7d32; padding: 10px; border-radius: 5px; margin: 10px 0;">
+            <%= success %>
+        </div>
+      <% } %>
+      <% if (locals.error) { %>
+        <div style="background-color: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; margin: 10px 0;">
+            <%= error %>
+        </div>
+      <% } %>
+    </div>
         <h2>Books I’ve read</h2>
         <p>This is brief summary but detailed notes for each. Use the ISBN number to find it from your local library or anywhere else. 
             .</p>

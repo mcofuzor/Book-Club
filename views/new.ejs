@@ -19,8 +19,14 @@
   <div class="content">
     <div class="summary">
       <div class="name-logout" >
-        <h3></h3>
-        <p><a href="/main" >Home</a> | <a href="/logout" >Logout</a> </p></div>
+        <h3>Add New Book</h3>
+        <p><a href="/main" >Home</a> | <a href="/logout" >Logout</a> </p>
+      </div>
+      <% if (locals.error) { %>
+        <div style="background-color: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; margin: 10px 0;">
+            <%= error %>
+        </div>
+      <% } %>
     </div>
     <div class="newnote">
        

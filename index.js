@@ -43,6 +43,15 @@ db.connect();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+// Basic security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -198,6 +207,22 @@ app.post("/adminlog",
     const isbn = req.body.isbn;
     const summary = req.body.summary;
     const userID = req.user.id;
+    
+    // Basic validation
+    if (!title || !author || !rate || !note || !isbn || !summary) {
+      return res.render("new.ejs", {
+        userID: req.user,
+        error: "All fields are required."
+      });
+    }
+    
+    if (rate < 1 || rate > 10) {
+      return res.render("new.ejs", {
+        userID: req.user,
+        error: "Rating must be between 1 and 10."
+      });
+    }
+    
     console.log(userID)
     try {
          db.query("INSERT INTO books (title, rating, readdate, userid, note, author, isbn, summary) VALUES (($1), ($2), ($3),($4),($5),($6),($7), ($8))", [title,  rate, notedate, userID, note,  author, isbn, summary]);
@@ -208,9 +233,15 @@ app.post("/adminlog",
 
      res.render("main.ejs", {
         books: abooks,
-        user: user})
+        user: user,
+        success: "Book added successfully!"
+      })
       } catch (err) {
         console.log(err);
+        res.render("new.ejs", {
+          userID: req.user,
+          error: "Error saving book. Please try again."
+        });
       } 
   }else {
       res.render("admin.ejs")
@@ -278,7 +309,9 @@ app.post("/update", async (req, res) => {
     
      res.render("main.ejs", {
         books: abooks,
-        user: user})
+        user: user,
+        success: "Book updated successfully!"
+      })
       } catch (err) {
         console.log(err);
       }
@@ -299,7 +332,9 @@ app.post("/delete/:id", async (req, res) => {
 
   res.render("main.ejs", {
         books: abooks,
-        user: user});
+        user: user,
+        success: "Book deleted successfully!"
+      });
 
 }else {
   res.render("admin.ejs")
