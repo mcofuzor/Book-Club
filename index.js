@@ -25,7 +25,7 @@ const db = new pg.Client({
 });
 db.connect();
 
-//Using the bodyparse middlware to locatte the statics files in the public folder
+//Using the passport and bodyparse middlware to locatte the statics files in the public folder and connect to passport session
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -34,11 +34,6 @@ app.use(cookieParser());
 
 let books = [];
 
-async function  getAllBook (userID) {
-    
-     return abooks
-
-}
 
 //Using expresssjs get to render the index page and using sql select state to restrieve books from the db
 app.get("/", async (req, res) => {
@@ -218,6 +213,8 @@ res.cookie("data", cData, { httpOnly: true });
         userlogin: data,
         books: abooks
         });
+
+    }})
     } catch(err){
         // console.log(err)
         const data = req.cookies.data
@@ -228,7 +225,7 @@ res.cookie("data", cData, { httpOnly: true });
             error: "Account Not Created.",
 
         })
-    }
+    } 
 
   });
 
@@ -276,11 +273,14 @@ res.cookie("data", cData, { httpOnly: true });
      })
       } catch (err) {
         console.log(err);
-      }
-  });
+      } 
+  }else {
+      res.render("admin.ejs")
+  }});
 
 
   app.get("/more/:id", async (req, res) => {
+   
     const bookID = parseInt(req.params.id);
     try {const result = await db.query("SELECT * FROM books WHERE id=($1)", [bookID]);
     const ebooks = result.rows[0];
@@ -348,9 +348,6 @@ app.post("/update", authorizeMiddleware, async (req, res) => {
         const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
         const bookResult = allbook.rows;
          const abooks= bookResult; 
-
-     const result = await db.query("SELECT * FROM admin WHERE id=($1)", [userID]);
-     const data = result.rows[0];
 db.end
     
      res.render("main.ejs", {
@@ -359,12 +356,14 @@ db.end
       } catch (err) {
         // console.log(err);
       }
-  });
+  }else {
+    res.render("admin.ejs")
+  }});
 
 app.post("/delete/:id", authorizeMiddleware, async (req, res) => {
     const bookID = parseInt(req.params.id);
-    const userID = req.body.userID;
-  await db.query("DELETE FROM  books WHERE id=($1)", [bookID]);
+    const userID = req.user.id;
+   db.query("DELETE FROM  books WHERE id=($1)", [bookID]);
 
   const allbook = await db.query("SELECT * FROM books  WHERE userid=($1) ORDER BY id ASC", [userID]);
         const bookResult = allbook.rows;
@@ -374,7 +373,6 @@ app.post("/delete/:id", authorizeMiddleware, async (req, res) => {
      const data = result.rows[0];
        res.redirect("/main")
   res.render("main.ejs", {
-        userlogin: data,
         books: abooks,});
 
 });
