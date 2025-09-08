@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Testing</title>
+    <title>Edit Book</title>
     <link rel="stylesheet" href="/styles/main.css">
+        <link rel="icon" href="/images/favicon.ico">
+
   </head>
   <body>
 
@@ -13,6 +15,14 @@
 
   <div class="header">
     <img src="/images/logo.png" alt="Michael's Book Club" width="300" height="80">
+    <div> <ul>
+     
+      <li><a href="/new/<%= userlogin.id%>">New Book
+      </a></li>
+      <% if (userlogin.usertype=="admin") { %>
+      <li id="adduser"><a href="/adduser" >Add User</a></li>
+      <% }%>
+    </ul></div>
 
 
   </div>
@@ -20,23 +30,29 @@
     <div class="summary">
 
       <div class="name-logout" >
-        <h3><%= data.firstname +" "+data.lastname %></h3>
-        <p><a href="#" >Logout</a> </p></div>
-       
-    </div>
+        <h3 class="welcome">Hello <span class="blue-text"><%= userlogin.firstname +" " + userlogin.lastname %></span>!</h3>
+        
+        <div class="nav-links">
+        <p class="blue-text"><a href="/main" >Home</a> |</p>
+          <p class="blue-text"><a href="/changepass" >Change Password</a> |</p>
+          <p class="blue-texti"><a href="/logout" >Logout</a> </p>
+      </div>
+      </div>
+      </div>
     <div class="newnote">
        
         <form class="holdnote" action="/update" method="post">
             <% if(locals.ebook) {%>
-          <input type="hidden" name="userID" value="<%= data.id %>">
+          <input type="hidden" name="userID" value="<%= userlogin.id %>">
           <input type="hidden" name="id" value="<%= ebook.id %>">
-        <div> <input id="edittitle" class="newbook"  name="title" type="text" value="<%= ebook.title %>" placeholder="Book Title" size="100"> </div>
+        <div><input id="edittitle" class="newbook"  name="title" type="text" value="<%= ebook.title %>" placeholder="Book Title" size="100"> </div>
         <div><input id="isbn-no" class="newbook" name="isbn" value="<%= ebook.isbn %>" type="text" placeholder="ISBN NO" size="50"></div>
-        <div> <input id="editauthor" class="newbook" name="author" value="<%= ebook.author %>" type="text" placeholder="Author Name" size="50"></div>
-        <div> <input id="editrate" class="newbook"  name="rate" value="<%= ebook.rating %>" type="number" placeholder="Rating Between 1 & 10" size="200"></div>
-        <div> <textarea class="editbook" name="note"  rows="50" cols="100%"><%= ebook.note %></textarea></div>
+        <div><input id="editauthor" class="newbook" name="author" value="<%= ebook.author %>" type="text" placeholder="Author Name" size="50"></div>
+        <div><input id="editrate" class="newbook"  name="rate" value="<%= ebook.rating %>" type="number" placeholder="Rating Between 1 & 10" size="200"></div>
+        <div><textarea class="editbook" name="summary"  rows="10" cols="100%" ><%= ebook.summary %></textarea></div>
+        <div><textarea class="editbook" name="note"  rows="50" cols="100%"><%= ebook.note %></textarea></div>
           
-        <div> <input class="newbook bookupdate"  type="submit" value="Update" ></div>
+        <div><input class="newbook bookupdate"  type="submit" value="Update" ></div>
         <% }%>
         </form>
           
@@ -47,7 +63,7 @@
 
 
   </div>
-  <div class="footer">Michael's Book Note, All Right Reserved</div>
+  <div class="footer">Michael's Book Club, All Right Reserved</div>
 
 
     </div>

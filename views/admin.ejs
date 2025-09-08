@@ -1,31 +1,33 @@
-<!DOCTYPE html>
+<!DOCTYPE text/html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Testing</title>
+    <title>Member Login</title>
     <link rel="stylesheet" href="/styles/main.css">
+    <link rel="icon" href="/images/favicon.ico">
   </head>
   <body>
 
     <div class="admin-login"> 
-        <div class="logon">
+      <div class="logon">
         <div class="logon-head"><h2>Login Page</h2>
             <% if (locals.error) { %>
             <p class="welcome"><%= error %></p>
             <% } %>
         <hr>
         </div>
-        <form class="details" action="/adminlog" id="" method="post">
+
+        <form class="details" id="admin-login-form" action="/adminlog" id="" method="post">
             <div class="dlabel"><label>Username</label></div>
             <div><input type="text" name="username" placeholder="Username" size="30"></div>
             <div class="dlabel"><label>Password</label></div>
-            <div><input type="text" name="pass" placeholder="Password" size="30"></div>
+            <div><input type="password" name="pass" placeholder="Password" size="30"></div>
             <div></div>
             <div><input class="button" type="submit" value="Login" ></div>
-
         </form>
+                  <div class="back-home"><a href="/">  Back To Home</a></div>
 
         </div>
    
@@ -33,7 +35,7 @@
 
     </div>
 
-
-    <script src="index.js"></script>
+    <script src="/js/script.js"></script>
+    <!-- <script src="/js/index.js"></script> -->
   </body>
 </html>

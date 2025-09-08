@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Book's</title>
+    <title>Michael's Book Club</title>
     <link rel="stylesheet" href="/styles/main.css">
+        <link rel="icon" href="/images/favicon.ico">
+
   </head>
   <body>
 
@@ -15,7 +17,7 @@
     <img src="/images/logo.png" alt="Michael's Book Club" width="300" height="80">
     <div> <ul>
      
-        <li><a href="/admin">Admin Panel
+        <li><a href="/admin">Member Login
         </a></li>
         
   
@@ -26,17 +28,19 @@
   <div class="content">
    
     <div class="summary">
-        <h2>Books I’ve read</h2>
-        <p>A brief summary but detailed notes for each. Use the ISBN number to find it from your local library or anywhere else. This page will constantly update as I read more, so bookmark it if you want to check back in a few months. </p>
+        <h2>Books we've read</h2>
+        <p>A brief summary but detailed notes for each. Use the ISBN number to find it from your local library or anywhere else. This page will constantly update as members of the club read more, so bookmark it if you want to check back in a few months. </p>
             <hr>
     </div>
     <% for(let book of books){%>
     <div class="main">
-        <div><a href="/more/<%= book.id %>"><img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn%>-M.jpg" alt="Cover Image" ></a></div>
-        <div>
+        <div class="holdcover"><a href="/more/<%= book.id %>">
+          <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn%>-M.jpg" alt="Cover Image" ></a></div>
+        <div class="holdcontent">
             
           <h2><%= book.title %> - by <%= book.author %></h2>
-          <span><b>Date read: <%= book.date %>. How strongly I recommend it: <%= book.rating %>/10</b></span>
+          <span><b>Date read: <% const date =  new Date(book.readdate); %> <%= date.toLocaleDateString() %> <b class="welcome">  ||  </b> How strongly I recommend it: <%= book.rating %>/10</b></span>
+          <p class="welcome"><b>ISBN-NO: <%= book.isbn %></b></p>
           <p class="welcome"><b>Reviewed By: <%= book.firstname +" " + book.lastname%></b></p>
           <p><%= book.summary %> </p>
           <h3><a href="/more/<%= book.id %>">Read More About The Book</a></h3>
@@ -47,9 +51,23 @@
     </div>
     
     <% }%>
-
+    <div class="pagination">
+    <% if (page > 1) { %>
+      <a href="/?page=<%= page - 1 %>">Previous</a>
+    <% } %>
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <% if (i === page) { %>
+        <span><%= i %></span>
+      <% } else { %>
+        <a href="/?page=<%= i %>"><%= i %></a>
+      <% } %>
+    <% } %>
+    <% if (page < totalPages) { %>
+      <a href="/?page=<%= page + 1 %>">Next</a>
+    <% } %>
   </div>
-  <div class="footer">Michael's Book Note, All Right Reserved</div>
+  </div>
+  <div class="footer">Michael's Book Club, All Right Reserved</div>
 
 
     </div>

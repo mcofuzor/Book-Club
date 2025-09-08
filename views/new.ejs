@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Testing</title>
+    <title>New Book</title>
     <link rel="stylesheet" href="/styles/main.css">
+        <link rel="icon" href="/images/favicon.ico">
   </head>
   <body>
 
@@ -13,24 +14,40 @@
 
   <div class="header">
     <img src="/images/logo.png" alt="Michael's Book Club" width="300" height="80">
+    <div> <ul>
+     
+      <li><a href="/new/<%= userlogin.id%>">New Book
+      </a></li>
+      <% if (userlogin.usertype=="admin") { %>
+      <li id="adduser"><a href="/adduser" >Add User</a></li>
+      <% }%>
+    </ul></div>
 
 
   </div>
   <div class="content">
     <div class="summary">
       <div class="name-logout" >
-        <h3></h3>
-        <p><a href="#" >Logout</a> </p></div>
-    </div>
+        <h3 class="welcome">Hello <span class="blue-text"><%= userlogin.firstname +" " + userlogin.lastname %></span>!</h3>
+        
+        <div class="nav-links">
+        <p class="blue-text"><a href="/main">Home</a> |</p>
+          <p class="blue-text"><a href="/changepass">Change Password</a> |</p>
+          <p class="blue-texti"><a href="/logout">Logout</a> </p>
+      </div>
+      </div>
+      </div>
     <div class="newnote">
-       
         <form class="holdnote" action="/newnote" method="post">
+        <div class="openlibcov"> Get the ISBN of the book from <a href="http://openlibrary.org">openlibrary.org...</a> </div>
           <input type="hidden" name="userID" value="<%= userID %>">
-        <div> <input id="edittitle" class="newbook"  name="title" type="text" placeholder="Book Title" size="100"> </div>
+        <div><input id="edittitle" class="newbook"  name="title" type="text" placeholder="Book Title" size="100"> </div>
         <div><input id="isbn-no" class="newbook" name="isbn"  type="text" placeholder="ISBN NO" size="50"></div>
-        <div> <input id="editauthor" class="newbook" name="author" type="text" placeholder="Author Name" size="50"></div>
-        <div> <input id="editrate" class="newbook"  name="rate"  type="number" placeholder="Rating Between 1 & 10" size="200"></div>
-        <div> <textarea class="editbook" name="note"  rows="50" cols="100%"></textarea></div>
+        <div><input id="editauthor" class="newbook" name="author" type="text" placeholder="Author Name" size="50"></div>
+        <div><input id="editrate" class="newbook"  name="rate"  type="number" placeholder="Rating Between 1 & 10" size="200"></div>
+        <div><textarea class="editbook" name="summary"  rows="10" placeholder="Brief Summary Of The Book" cols="100%"></textarea></div>
+
+        <div><textarea class="editbook" name="note"  rows="50" placeholder="Full Note Of the Book" cols="100%"></textarea></div>
           
         <div> <input class="newbook bookupdate"  type="submit" value="Submit" ></div>
         </form>
@@ -42,7 +59,8 @@
 
 
   </div>
-  <div class="footer">Michael's Book Note, All Right Reserved</div>
+  
+  <div class="footer">Michael's Book Club, All Right Reserved</div>
 
 
     </div>

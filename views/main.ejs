@@ -4,12 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Testing</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="/styles/main.css">
+    <link rel="icon" href="/images/favicon.ico">
+
   </head>
   <body>
+    <!-- <% if (locals.token) { %>
+    <script>
+      fetch('/main', {
+  method: 'GET',
+  headers: {
+    'Authorization': localStorage.getItem('token')
+  }
+});
+
+      </script>
+    <% } %> -->
+
 
     <div class="container"> 
+    <% if (locals.successmsg) { %>
+  <script>
+    alert("<%= locals.successmsg %>");
+  </script>
+<% } %>
 
   <div class="header">
     <img src="/images/logo.png" alt="Michael's Book Club" width="300" height="80">
@@ -26,8 +45,15 @@
   <div class="content">
     <div class="summary">
       <div class="name-logout" >
-        <h3 class="welcome">Welcome Back <%= userlogin.firstname +" " + userlogin.lastname %> !</h3>
-        <p><a href="#" >Logout</a> </p></div>
+        <h3 class="welcome">Welcome Back <span class="blue-text"><%= userlogin.firstname +" " + userlogin.lastname %></span>!</h3>
+
+        <div class="nav-links">
+        <p class="blue-text"><a href="/main" >Home</a> |</p>
+          <p class="blue-text"><a href="/changepass" >Change Password</a> |</p>
+          <p class="blue-texti"><a href="/logout" >Logout</a> </p>
+      </div>
+        
+      </div>
         <h2>Books I’ve read</h2>
         <p>This is brief summary but detailed notes for each. Use the ISBN number to find it from your local library or anywhere else. 
             .</p>
@@ -41,9 +67,9 @@
         <div>
 
           <h2 id="title<%= book.id %> "><%= book.title %> - by <%= book.author %></h2>
-          <span id="date<%= book.id %>"><b><%= book.date %>.. How strongly I recommend it: <%= book.rating %>/10</b></span>
+          <span id="date<%= book.id %>"><b>Date read: <% const date =  new Date(book.readdate); %> <%= date.toLocaleDateString() %>.. How strongly I recommend it: <%= book.rating %>/10</b></span>
           <p id="note<%= book.id %>"> <%= book.summary %> </p>
-          <h3><a class="readmore" href="/more/<%= book.id %>">Read More About The Book</a></h3>
+          <h3><a class="readmore" href="/amore/<%= book.id %>">Read More About The Book</a></h3>
           <form class="edit" action="/edit" method="post">
             <input type="hidden" name="updatedBookId" value="<%= book.id %>">
           <input id="edittitle<%=book.id%>" class="editbook" hidden="true" type="text" placeholder="Book Title"  value="<%= book.title %>"  size="200">
@@ -75,7 +101,7 @@
 
     <% }%>
   </div>
-  <div class="footer">Michael's Book Note, All Right Reserved</div>
+  <div class="footer">Michael's Book Club, All Right Reserved</div>
 
 
     </div>

@@ -70,8 +70,12 @@ textarea {
 .main img {
     width: 100%; 
     height: 90%;
-    border: 4px black;
     border-radius: 5px;
+
+
+}
+.holdcover {
+    border: 10px black;
 
 }
 

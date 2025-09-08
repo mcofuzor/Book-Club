@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add Member</title>
+    <title>Change Password</title>
     <link rel="stylesheet" href="/styles/main.css">
-        <link rel="icon" href="/images/favicon.ico">
-
   </head>
   <body>
 
@@ -31,7 +29,7 @@
         <div class="name-logout" >
         <h3 class="welcome">Hello <span class="blue-text"><%= userlogin.firstname +" " + userlogin.lastname %></span>!</h3>
 
-       <div class="nav-links">
+        <div class="nav-links">
         <p class="blue-text"><a href="/main" >Home</a> |</p>
           <p class="blue-text"><a href="/changepass" >Change Password</a> |</p>
           <p class="blue-texti"><a href="/logout" >Logout</a> </p>
@@ -42,21 +40,16 @@
         <% if (locals.error) { %>
         <p class="welcome"><%= error %></p>
         <% } %>
-        <form class="holdnote" action="/add" method="post">
-          <input type="hidden" name="userID" value="<%= userID %>">
-        <div><input id="edittitle" class="newbook"  name="fname" type="text" placeholder="First Name" size="50" required> </div>
-        <div><input id="isbn-no" class="newbook" name="lname"  type="text" placeholder="Last Name" size="50" required></div>
-        <div><input id="editauthor" class="newbook" name="uname" type="text" placeholder="User Name" size="50" required></div>
-        <div><input id="editrate" class="newbook"  name="upass"  type="password" placeholder="Password" size="50" required></div>
-        <div><select name="type" class="newbook" required>
-            <option value="" disabled selected>Select User Type</option>
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-          </select>
-          </div>
-        
-          
-        <div> <input class="newbook bookupdate"  type="submit" value="Register" ></div>
+         <% if (locals.success) { %>
+        <script>
+          alert("<%= success %>");
+        </script>
+        <% } %>
+        <form class="holdnote" action="/updatepass" method="post">
+        <div><input id="edittitle" class="newbook"  name="oldpass" type="password" placeholder="Old Password" size="50" required> </div>
+        <div><input id="isbn-no" class="newbook" name="newpass"  type="password" placeholder="New Password" size="50" required></div>
+        <div><input id="editauthor" class="newbook" name="confirmnewpass" type="password" placeholder="Confirm New Password" size="50" required></div>
+        <div><input class="newbook bookupdate"  type="submit" value="Change Password" ></div>
         </form>
           
       
@@ -66,7 +59,7 @@
 
 
   </div>
-  <div class="footer">Michael's Book Club, All Right Reserved</div>
+  <div class="footer">Michael's Book Note, All Right Reserved</div>
 
 
     </div>

@@ -13,15 +13,16 @@ body {
 
 }
 .container {
-width: 80%;
+width: 95%;
 min-height: 100vh;
 overflow: hidden;
-border-left: 4px solid #010172;
-border-right: 4px solid #010172;
+border-left: 2px solid #010172;
+border-right: 2px solid #010172;
+box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.1);
 background-color: #F2F2F2;
 display: grid;
 grid-template-rows: 100px auto 50px;
-font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+font-family: 'Open Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 .header {
     padding-left: 10px;
@@ -57,6 +58,10 @@ ul {
     
 
 }
+ .header li:hover {
+    background-color: #63d0de;
+    color: white;
+    }
 .content {
     padding: 10px;
     display: grid;
@@ -75,13 +80,48 @@ ul {
 
 
 }
+.back-home {
+    display: flex;
+    width: 80%;
+    align-items: center;
+    padding: 15px;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 2px;
+    text-align: center;
+    background-color: #010172;
+    color: white;
+    border-radius: 15px;
+    font-weight: bold;
+    
+}
+
+.back-home:hover {
+    background-color: #63d0de;
+}
+
+.back-home a {
+    color: white;
+    text-decoration: none;
+}
+.back-home a:before {
+    content: "← ";
+}
+
 .holdimg {
     height: 400px;
 }
 .holdcontent {
     height: auto;
-
-
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+.holdnote {
+    white-space: pre-wrap;
 }
 .holdedit {
     display: grid;
@@ -105,19 +145,36 @@ ul {
     padding: 0;
 }
 .newbook {
-    margin: 20px;
-
+    margin: 2px;
+    margin-left: 50px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
-textarea, select{
-    margin-left: 15px;
+.openlibcov {
+    margin: 2px;
+    margin-left: 50px;
+}
+textarea{
+    margin-left: 50px;
     padding: 15px;
     border-radius: 10px;
+    border: 1px solid #ccc;
+    resize:none;
+    font-family: 'Open Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+}
+select{
+    margin-left: 50px;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
 }
 
 .main img {
     width: 100%; 
     height: 90%;
-    border: 4px black;
+    border: 4px black!important;
     border-radius: 5px;
 
 }
@@ -132,8 +189,31 @@ textarea, select{
 }
 .name-logout {
     display: grid;
-    grid-template-columns: 80% 20%;
+    grid-template-columns: 60% 40%;
 
+}
+.nav-links a:hover {
+    text-decoration: none;
+    color: brown;
+    font-weight: bold;
+
+}
+.nav-links {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    font-weight: bold;
+
+}
+.blue-text {
+    color: #010172;
+}
+.blue-text a {
+    color: #010172;
+}
+.blue-texti {
+    font-style: italic;
 }
 .logon {
     width: 500px;
@@ -186,12 +266,34 @@ input {
 }
 
 .bookupdate {
-    background-color: beige;
+    background-color: #010172;
     padding-left: 40px;
     padding-right: 40px;
     font-weight: bold;
     margin-top: 20px;
+    color: white;
 
+}
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+.pagination a {
+  padding: 0.5rem 1rem;
+  background: #63d0de;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.pagination span {
+  padding: 0.5rem 1rem;
+  background: #010172;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: bold;
 }
 
 
@@ -219,49 +321,61 @@ input {
         border-right: 4px solid #010172;
         background-color: #F2F2F2;
         display: grid;
-        grid-template-rows: 150px auto 50px;
+        grid-template-rows: auto auto 50px;
         font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         }
 
     .header {
         padding-left: 10px;
+        height: auto;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: white;
         font-weight: bold ;
         border-bottom: 2px solid white;
-        display: grid;
-        grid-template-rows: 50% 50%;
+        display: flex;
+        flex-direction: column;
         background-color: #010172;
         
     
     
     }
     ul { 
-       
-        align-items: right;
-        float: center;
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         padding: 20px;
+        gap: 5px;
+
       
     
     }
     .header li {
-        display: inline-block;
+        margin: 0 10px;
+        width: 100%;
+
+        text-align: center;
+        vertical-align: middle;
         text-decoration: none;
         padding: 10px;
-        border-radius: 15px;
         color: black!important;
         background-color: white;
         padding-left: 20px;
         padding-right: 20px;
-    
-        
-    
+        border-radius: 0;
+
+
+    }
+    .header li:hover {
+        background-color: #63d0de;
+        color: white;
     }
     .content {
         padding: 10px;
         display: grid;
         height: auto;
-        grid-template-rows: auto auto;
+        grid-template-rows: auto auto auto;
     
     }
     .main {
@@ -275,6 +389,22 @@ input {
         
     
     
+    }
+    .newnote {
+
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 10% 10% 10% 10% 50% 10% ;
+        height: auto;
+        gap: 20px;
+        padding: 0;
+    }
+    .name-logout {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
     }
     
     .holdimg {
@@ -300,18 +430,20 @@ input {
     
     .newnote {
         display: grid;
+        width: 100%;
         grid-template-columns: 100%;
         grid-template-rows: 10% 10% 10% 10% 50% 10% ;
         height: auto;
-        gap: 20px;
+        gap: 5px;
         padding: 0;
     }
     .newbook {
         margin: 20px;
     
     }
-    textarea, select{
-        margin-left: 15px;
+    input, textarea, select{
+        width: 90%;
+        margin-left: 10px;
         padding: 15px;
         border-radius: 10px;
     }
@@ -329,6 +461,9 @@ input {
         display: flex;
         align-items: center;
         justify-content: center;
+        min-height: 100vh;
+        width: 100%;
+
     
     
     }
@@ -383,12 +518,17 @@ input {
     }
     
     .bookupdate {
-        background-color: beige;
+        background-color: #010172;
         padding-left: 40px;
         padding-right: 40px;
         font-weight: bold;
         margin-top: 20px;
     
+    }
+    .holdedit {
+        display: grid;
+        width: 100%;
+        grid-template-columns: 50% 50%;
     }
 
 

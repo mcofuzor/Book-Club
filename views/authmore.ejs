@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="icon" href="/images/favicon.ico">
+
+  </head>
+  <body>
+    <!-- <% if (locals.token) { %>
+    <script>
+      fetch('/main', {
+  method: 'GET',
+  headers: {
+    'Authorization': localStorage.getItem('token')
+  }
+});
+
+      </script>
+    <% } %> -->
+
+
+    <div class="container"> 
+    <% if (locals.successmsg) { %>
+  <script>
+    alert("<%= locals.successmsg %>");
+  </script>
+<% } %>
+
+  <div class="header">
+    <img src="/images/logo.png" alt="Michael's Book Club" width="300" height="80">
+    <div> <ul>
+     
+      <li><a href="/new/<%= userlogin.id%>">New Book
+      </a></li>
+      <% if (userlogin.usertype=="admin") { %>
+      <li id="adduser"><a href="/adduser" >Add User</a></li>
+      <% }%>
+    </ul></div>
+
+  </div>
+  <div class="content">
+    <div class="summary">
+      <div class="name-logout" >
+        <h3 class="welcome">Welcome Back <span class="blue-text"><%= userlogin.firstname +" " + userlogin.lastname %></span>!</h3>
+
+        <div class="nav-links">
+        <p class="blue-text"><a href="/main" >Home</a> |</p>
+          <p class="blue-text"><a href="/changepass" >Change Password</a> |</p>
+          <p class="blue-texti"><a href="/logout" >Logout</a> </p>
+      </div>
+        
+      </div>
+         <h2 class="welcome"> <%= book.title %></h2>
+            <hr>
+    </div>
+      
+    <div class="main">
+      
+        <div class="holdimg"><a href="/more/<%= book.id %>"><img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn%>-M.jpg" alt="Cover Image" height="200px"></a></div>
+        <div>
+
+          <h3>Author: <%= book.author %></h3>
+          <span id="date<%= book.id %>"><b>Date read: <% const date =  new Date(book.readdate); %> <%= date.toLocaleDateString() %>.. How strongly I recommend it: <%= book.rating %>/10</b></span>
+          <p id="note<%= book.id %>"> <%= book.summary %> </p>
+          <br>
+
+          <p class="holdnote"><%= book.note %> </p>
+          
+          
+       
+       
+        </div>
+          <BR>
+         
+        </div>
+        
+      
+       
+    </div>
+    
+
+    
+  
+  <div class="footer">Michael's Book Club, All Right Reserved</div>
+
+
+    </div>
+
+   
+  </body>
+</html>
